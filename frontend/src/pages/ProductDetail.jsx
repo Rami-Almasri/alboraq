@@ -8,6 +8,7 @@ import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 import { formatPrice, imgUrl } from "../utils/format";
 import SmartImage from "../components/SmartImage";
+import ProductReviews from "../components/ProductReviews";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -17,6 +18,9 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const refreshProduct = () =>
+    api.get(`/products/${slug}`).then((r) => setProduct(r.data.data)).catch(() => {});
 
   useEffect(() => {
     setLoading(true);
@@ -175,6 +179,15 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Reviews */}
+        <ProductReviews
+          slug={product.slug}
+          reviews={product.reviews || []}
+          count={product.reviews_count ?? (product.reviews?.length || 0)}
+          avg={product.reviews_avg || product.rating}
+          onChange={refreshProduct}
+        />
 
         {/* Related */}
         {related.length > 0 && (

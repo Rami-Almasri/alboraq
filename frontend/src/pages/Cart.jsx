@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiTrash2, FiShoppingBag, FiArrowLeft } from "react-icons/fi";
+import { FiTrash2, FiShoppingBag, FiArrowLeft, FiTag, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import api from "../api/axios";
@@ -15,14 +15,42 @@ export default function Cart() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [placing, setPlacing] = useState(false);
+  const [code, setCode] = useState("");
+  const [applied, setApplied] = useState(null);
+  const [applying, setApplying] = useState(false);
 
   const shipping = total > 0 ? 25000 : 0;
+  const discount = applied?.discount || 0;
+  const grandTotal = Math.max(0, total + shipping - discount);
+
+  const applyCoupon = async () => {
+    if (!code.trim()) return;
+    setApplying(true);
+    try {
+      const { data } = await api.post("/coupons/validate", {
+        code: code.trim(),
+        total,
+      });
+      setApplied(data.data);
+      toast.success(`تم تطبيق كود الخصم ${data.data.code} 🎉`);
+    } catch (e) {
+      setApplied(null);
+      toast.error(e?.response?.data?.message || "كود الخصم غير صالح");
+    } finally {
+      setApplying(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setApplied(null);
+    setCode("");
+  };
 
   const checkout = async () => {
     if (!user) return navigate("/login");
     setPlacing(true);
     try {
-      await api.post("/orders");
+      await api.post("/orders", applied ? { coupon_code: applied.code } : {});
       await refresh();
       toast.success("تم تأكيد طلبك بنجاح! 🎉");
       navigate("/orders");
@@ -96,11 +124,52 @@ export default function Cart() {
           <div className="h-fit lg:sticky lg:top-20">
             <div className="card p-6">
               <h3 className="mb-4 text-lg font-black">ملخص الطلب</h3>
+
+              {/* Coupon */}
+              <div className="mb-4">
+                {applied ? (
+                  <div className="flex items-center justify-between rounded-xl bg-emerald-50 px-3 py-2 text-sm">
+                    <span className="flex items-center gap-2 font-bold text-emerald-700">
+                      <FiTag /> {applied.code}
+                    </span>
+                    <button onClick={removeCoupon} className="text-emerald-700 hover:text-red-500">
+                      <FiX />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <div className="flex flex-1 items-center gap-2 rounded-xl bg-slate-100 px-3">
+                      <FiTag className="text-slate-400" />
+                      <input
+                        value={code}
+                        onChange={(e) => setCode(e.target.value.toUpperCase())}
+                        placeholder="كود الخصم"
+                        className="w-full bg-transparent py-2 text-sm outline-none"
+                      />
+                    </div>
+                    <button
+                      onClick={applyCoupon}
+                      disabled={applying}
+                      className="btn-ghost px-4 text-sm disabled:opacity-50"
+                    >
+                      {applying ? "..." : "تطبيق"}
+                    </button>
+                  </div>
+                )}
+                <p className="mt-1 text-[11px] text-slate-400">جرّب: WELCOME10</p>
+              </div>
+
               <div className="space-y-3 text-sm">
                 <Row label="المجموع الفرعي" value={`${formatPrice(total)} ل.س`} />
                 <Row label="رسوم التوصيل" value={`${formatPrice(shipping)} ل.س`} />
+                {discount > 0 && (
+                  <div className="flex items-center justify-between text-emerald-600">
+                    <span>الخصم</span>
+                    <span>− {formatPrice(discount)} ل.س</span>
+                  </div>
+                )}
                 <div className="border-t border-dashed pt-3">
-                  <Row label="الإجمالي" value={`${formatPrice(total + shipping)} ل.س`} bold />
+                  <Row label="الإجمالي" value={`${formatPrice(grandTotal)} ل.س`} bold />
                 </div>
               </div>
               <button onClick={checkout} disabled={placing} className="btn-primary mt-6 w-full disabled:opacity-60">

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CartItem;
+use App\Models\Conversation;
 use App\Models\Favorite;
 use App\Models\Order;
 use App\Models\Product;
@@ -23,6 +24,11 @@ class DemoSeeder extends Seeder
         $user = User::where('email', 'test@example.com')->first();
         if (! $user) {
             return;
+        }
+
+        // Demo customer role
+        if (\Spatie\Permission\Models\Role::where('name', 'customer')->exists()) {
+            $user->syncRoles(['customer']);
         }
 
         // ---- Favorites (wishlist) ----
@@ -113,5 +119,46 @@ class DemoSeeder extends Seeder
                 ]);
             }
         }
+
+        $this->seedChat($user);
+    }
+
+    private function seedChat(User $user): void
+    {
+        $support = User::where('email', 'support@alboraq.com')->first();
+
+        $conversation = Conversation::firstOrCreate(
+            ['user_id' => $user->id, 'status' => 'open'],
+            ['subject' => 'دعم العملاء', 'agent_id' => $support?->id, 'last_message_at' => now()]
+        );
+
+        if ($conversation->messages()->exists()) {
+            return;
+        }
+
+        $script = [
+            [$user->id, 'مرحباً، هل هاتف Galaxy S24 Ultra متوفر باللون الأسود؟', 60],
+            [$support?->id, 'أهلاً بك في البراق! نعم متوفر باللون الأسود التيتانيوم والكمية محدودة.', 55],
+            [$user->id, 'ممتاز، وهل التوصيل متاح لمدينة حلب؟', 50],
+            [$support?->id, 'بالتأكيد، التوصيل متاح لكل المحافظات خلال 2-4 أيام عمل.', 45],
+        ];
+
+        foreach ($script as [$senderId, $body, $minsAgo]) {
+            if (! $senderId) {
+                continue;
+            }
+            $msg = $conversation->messages()->create([
+                'sender_id' => $senderId,
+                'body' => $body,
+                'is_read' => true,
+            ]);
+            $time = now()->subMinutes($minsAgo);
+            $msg->forceFill(['created_at' => $time, 'updated_at' => $time])->save();
+        }
+
+        $conversation->update([
+            'last_message_at' => now()->subMinutes(45),
+            'agent_id' => $support?->id,
+        ]);
     }
 }

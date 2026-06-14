@@ -125,6 +125,15 @@ export default function Navbar() {
 
           {user ? (
             <div className="hidden items-center gap-2 sm:flex">
+              {user.is_agent && (
+                <Link
+                  to="/support"
+                  className="rounded-lg bg-brand-50 px-3 py-1.5 text-sm font-bold text-brand-600 hover:bg-brand-100"
+                  title="لوحة الدعم"
+                >
+                  لوحة الدعم
+                </Link>
+              )}
               <Link
                 to="/orders"
                 className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-500"

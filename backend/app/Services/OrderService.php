@@ -12,6 +12,13 @@ class OrderService
 {
     const SHIPPING_FEE = 25000;
 
+    private CouponService $couponService;
+
+    public function __construct(CouponService $couponService)
+    {
+        $this->couponService = $couponService;
+    }
+
     public function index()
     {
         return Order::query()
@@ -44,12 +51,26 @@ class OrderService
                 fn ($item) => $item->quantity * (float) $item->product->price
             );
 
+            // Apply coupon if provided
+            $discount = 0;
+            $couponCode = null;
+            if (! empty($data['coupon_code'])) {
+                $result = $this->couponService->validateCode($data['coupon_code'], $subtotal);
+                $discount = $result['discount'];
+                $couponCode = $result['coupon']->code;
+                $result['coupon']->increment('used_count');
+            }
+
+            $total = max(0, $subtotal + self::SHIPPING_FEE - $discount);
+
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'reference' => 'ORD-' . strtoupper(Str::random(8)),
                 'subtotal' => $subtotal,
                 'shipping' => self::SHIPPING_FEE,
-                'total' => $subtotal + self::SHIPPING_FEE,
+                'discount' => $discount,
+                'coupon_code' => $couponCode,
+                'total' => $total,
                 'status' => 'pending',
                 'customer_name' => $data['customer_name'] ?? Auth::user()->name,
                 'phone' => $data['phone'] ?? Auth::user()->phone,

@@ -18,6 +18,11 @@ class AuthService
             'password' => Hash::make($data['password']),
         ]);
 
+        // Every new account is a customer by default
+        if (\Spatie\Permission\Models\Role::where('name', 'customer')->exists()) {
+            $user->assignRole('customer');
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return ['user' => $user, 'token' => $token];

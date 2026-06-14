@@ -28,6 +28,12 @@ class ProductResource extends JsonResource
             'rating' => $this->rating,
             'is_featured' => $this->is_featured,
             'category' => new CategoryResource($this->whenLoaded('category')),
+            'reviews_count' => $this->whenCounted('reviews'),
+            'reviews_avg' => $this->when(
+                isset($this->reviews_avg_rating),
+                fn () => round((float) $this->reviews_avg_rating, 1)
+            ),
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
             'created_at' => $this->created_at,
         ];
     }

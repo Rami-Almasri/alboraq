@@ -11,9 +11,11 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Favorites from "./pages/Favorites";
 import Orders from "./pages/Orders";
+import Support from "./pages/Support";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import ChatWidget from "./components/ChatWidget";
 
 export default function App() {
   const location = useLocation();
@@ -30,6 +32,7 @@ export default function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/support" element={<Support />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
@@ -38,6 +41,7 @@ export default function App() {
       </main>
       <Footer />
       <BackToTop />
+      <ChatWidget />
     </div>
   );
 }

@@ -11,6 +11,8 @@ class ProductService
     {
         $query = Product::query()
             ->with('category')
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->where('is_active', true);
 
         // Filter by category slug
@@ -48,6 +50,9 @@ class ProductService
 
     public function show(Product $product): Product
     {
-        return $product->load('category');
+        return $product
+            ->load(['category', 'reviews.user'])
+            ->loadCount('reviews')
+            ->loadAvg('reviews', 'rating');
     }
 }

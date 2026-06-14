@@ -15,8 +15,22 @@ Full-stack e-commerce store with a **Laravel 12 REST API** backend and a **React
 
 - Products, categories, search, filtering & sorting
 - User auth (register / login / logout) via Laravel Sanctum
-- Favorites (wishlist), shopping cart, and order checkout (cash on delivery)
+- **Role-based access** (admin / support / customer) via **Spatie Permission**
+- Favorites (wishlist), shopping cart, order checkout & order history
+- **Live customer ↔ support chat** with image attachments (**Spatie Media Library**), polling, and a support dashboard
+- **Product reviews & ratings**
+- **Discount coupon codes** at checkout
 - Animated, responsive Arabic RTL interface
+
+## Demo accounts
+
+| Role | Email | Password |
+|---|---|---|
+| Customer | `test@example.com` | `password` |
+| Support agent | `support@alboraq.com` | `password` |
+| Admin | `admin@alboraq.com` | `password` |
+
+**Coupon codes:** `WELCOME10` (10% off), `EID20` (20% off orders ≥ 5,000,000), `SAVE50K` (500,000 off orders ≥ 2,000,000)
 
 ## Backend setup (Laravel)
 

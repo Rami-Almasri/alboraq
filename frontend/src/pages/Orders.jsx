@@ -123,6 +123,12 @@ export default function Orders() {
                       <div className="mt-4 grid gap-1 border-t border-dashed pt-4 text-sm sm:max-w-xs sm:mr-auto">
                         <Row label="المجموع الفرعي" value={`${formatPrice(order.subtotal)} ل.س`} />
                         <Row label="التوصيل" value={`${formatPrice(order.shipping)} ل.س`} />
+                        {Number(order.discount) > 0 && (
+                          <div className="flex items-center justify-between text-emerald-600">
+                            <span>الخصم{order.coupon_code ? ` (${order.coupon_code})` : ""}</span>
+                            <span>− {formatPrice(order.discount)} ل.س</span>
+                          </div>
+                        )}
                         <Row label="الإجمالي" value={`${formatPrice(order.total)} ل.س`} bold />
                         {order.address && (
                           <p className="mt-2 text-xs text-slate-400">عنوان التوصيل: {order.address}</p>
