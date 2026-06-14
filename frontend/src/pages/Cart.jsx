@@ -25,7 +25,7 @@ export default function Cart() {
       await api.post("/orders");
       await refresh();
       toast.success("تم تأكيد طلبك بنجاح! 🎉");
-      navigate("/");
+      navigate("/orders");
     } catch (e) {
       toast.error(e?.response?.data?.message || "تعذر إتمام الطلب");
     } finally {

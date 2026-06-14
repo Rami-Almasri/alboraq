@@ -11,6 +11,7 @@ import {
   FiLogOut,
   FiTruck,
   FiPhone,
+  FiPackage,
 } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -124,6 +125,13 @@ export default function Navbar() {
 
           {user ? (
             <div className="hidden items-center gap-2 sm:flex">
+              <Link
+                to="/orders"
+                className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-500"
+                title="طلباتي"
+              >
+                <FiPackage />
+              </Link>
               <span className="max-w-[90px] truncate text-sm font-semibold text-slate-700">
                 {user.name}
               </span>
@@ -182,9 +190,18 @@ export default function Navbar() {
                 </NavLink>
               ))}
               {user ? (
-                <button onClick={logout} className="btn-ghost mt-2 justify-start">
-                  <FiLogOut /> تسجيل الخروج ({user.name})
-                </button>
+                <>
+                  <NavLink
+                    to="/orders"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-brand-50"
+                  >
+                    <FiPackage /> طلباتي
+                  </NavLink>
+                  <button onClick={logout} className="btn-ghost mt-2 justify-start">
+                    <FiLogOut /> تسجيل الخروج ({user.name})
+                  </button>
+                </>
               ) : (
                 <Link to="/login" onClick={() => setOpen(false)} className="btn-primary mt-2">
                   <FiUser /> تسجيل الدخول

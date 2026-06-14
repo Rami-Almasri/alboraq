@@ -16,14 +16,14 @@ class OrderService
     {
         return Order::query()
             ->where('user_id', Auth::id())
-            ->with('items')
+            ->with('items.product')
             ->latest()
             ->get();
     }
 
     public function show(Order $order): Order
     {
-        return $order->load('items');
+        return $order->load('items.product');
     }
 
     /**
@@ -70,7 +70,7 @@ class OrderService
             // Empty the cart after a successful order
             CartItem::where('user_id', Auth::id())->delete();
 
-            return $order->load('items');
+            return $order->load('items.product');
         });
     }
 }
