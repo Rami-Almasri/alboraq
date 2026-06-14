@@ -12,7 +12,7 @@ import api from "../api/axios";
 import PageWrapper from "../components/PageWrapper";
 import ProductCard from "../components/ProductCard";
 import ProductSkeleton from "../components/ProductSkeleton";
-import { imgUrl } from "../utils/format";
+import SmartImage from "../components/SmartImage";
 
 const features = [
   { icon: <FiTruck />, title: "توصيل سريع", desc: "لكل المحافظات السورية" },
@@ -87,14 +87,33 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="relative grid place-items-center"
           >
-            <div className="animate-float">
+            {/* glow ring */}
+            <div className="absolute h-72 w-72 rounded-full bg-accent/20 blur-2xl" />
+            <div className="animate-float rounded-[2rem] bg-white/5 p-4 ring-1 ring-white/10 backdrop-blur-sm">
               <img
-                src="https://images.samsung.com/is/image/samsung/p6pim/levant_ar/sm-s928bzkcmea/gallery/levant-ar-galaxy-s24-ultra-s928-sm-s928bzkcmea-thumb-539573043"
-                onError={(e) => (e.currentTarget.style.display = "none")}
+                src="/products/smartphone.svg"
                 alt="Samsung Galaxy"
-                className="max-h-[420px] drop-shadow-2xl"
+                className="h-[360px] w-auto drop-shadow-2xl"
               />
             </div>
+            {/* floating chips */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute -bottom-2 right-2 flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-brand-900 shadow-xl"
+            >
+              <span className="text-amber-500">★</span>
+              <span className="text-sm font-bold">4.9 تقييم العملاء</span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
+              className="absolute left-2 top-4 rounded-2xl bg-accent px-4 py-2 text-sm font-extrabold text-white shadow-xl"
+            >
+              خصم حتى 20%
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -139,11 +158,11 @@ export default function Home() {
                 to={c ? `/products?category=${c.slug}` : "/products"}
                 className="card group flex flex-col items-center gap-3 p-6 text-center transition-all hover:shadow-glow"
               >
-                <div className="grid h-20 w-20 place-items-center overflow-hidden rounded-2xl bg-brand-50">
+                <div className="h-24 w-24 overflow-hidden rounded-2xl bg-brand-50 p-1 transition-transform duration-300 group-hover:scale-110">
                   {c?.image ? (
-                    <img src={imgUrl(c.image)} alt={c.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                    <SmartImage src={c.image} alt={c.name} className="h-full w-full" />
                   ) : (
-                    <span className="text-3xl">📱</span>
+                    <span className="grid h-full place-items-center text-3xl">📱</span>
                   )}
                 </div>
                 <p className="font-bold text-slate-800 group-hover:text-brand-500">

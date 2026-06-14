@@ -7,7 +7,8 @@ import api from "../api/axios";
 import PageWrapper from "../components/PageWrapper";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { formatPrice, imgUrl } from "../utils/format";
+import { formatPrice } from "../utils/format";
+import SmartImage from "../components/SmartImage";
 
 export default function Cart() {
   const { items, total, updateQty, removeFromCart, refresh } = useCart();
@@ -67,8 +68,8 @@ export default function Cart() {
                     exit={{ opacity: 0, x: -40 }}
                     className="card flex items-center gap-4 p-4"
                   >
-                    <div className="grid h-24 w-24 shrink-0 place-items-center rounded-xl bg-slate-50 p-2">
-                      <img src={imgUrl(p.image)} alt={p.name} className="max-h-full object-contain" />
+                    <div className="h-24 w-24 shrink-0 rounded-xl bg-slate-50 p-2">
+                      <SmartImage src={p.image} alt={p.name} className="h-full w-full" />
                     </div>
                     <div className="flex-1">
                       <Link to={`/products/${p.slug}`} className="font-bold text-slate-800 hover:text-brand-500 line-clamp-1">

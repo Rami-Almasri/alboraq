@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiShoppingCart,
   FiHeart,
@@ -9,6 +9,8 @@ import {
   FiMenu,
   FiX,
   FiLogOut,
+  FiTruck,
+  FiPhone,
 } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -26,7 +28,14 @@ export default function Navbar() {
   const { count, favorites } = useCart();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const search = (e) => {
     e.preventDefault();
@@ -35,8 +44,27 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
-      <div className="container-app flex h-16 items-center gap-4">
+    <>
+      {/* Announcement bar */}
+      <div className="bg-brand-900 text-white">
+        <div className="container-app flex h-9 items-center justify-between text-xs">
+          <span className="flex items-center gap-1.5">
+            <FiTruck className="text-accent" /> توصيل مجاني للطلبات فوق 5,000,000 ل.س
+          </span>
+          <span className="hidden items-center gap-1.5 sm:flex">
+            <FiPhone className="text-accent" /> 963 11 123 4567+
+          </span>
+        </div>
+      </div>
+
+      <header
+        className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+          scrolled
+            ? "border-black/5 bg-white/90 shadow-md backdrop-blur-xl"
+            : "border-transparent bg-white/70 backdrop-blur-xl"
+        }`}
+      >
+        <div className="container-app flex h-16 items-center gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <motion.div
@@ -166,7 +194,8 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+      </header>
+    </>
   );
 }
 

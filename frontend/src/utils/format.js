@@ -15,6 +15,8 @@ export const placeholder =
 export const imgUrl = (src) => {
   if (!src) return placeholder;
   if (src.startsWith("http")) return src;
+  // Root-relative assets (e.g. /products/tv.svg) are served from the frontend's public dir
+  if (src.startsWith("/")) return src;
   const base = (import.meta.env.VITE_API_URL || "http://localhost:8001/api").replace(
     "/api",
     ""

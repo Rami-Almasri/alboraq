@@ -3,6 +3,8 @@ import { AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -16,6 +18,7 @@ export default function App() {
   const location = useLocation();
   return (
     <div className="flex min-h-screen flex-col">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-1">
         <AnimatePresence mode="wait">
@@ -32,6 +35,7 @@ export default function App() {
         </AnimatePresence>
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

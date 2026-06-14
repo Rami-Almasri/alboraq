@@ -7,6 +7,7 @@ import PageWrapper from "../components/PageWrapper";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 import { formatPrice, imgUrl } from "../utils/format";
+import SmartImage from "../components/SmartImage";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -80,9 +81,9 @@ export default function ProductDetail() {
               key={active}
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="card grid place-items-center bg-slate-50 p-10"
+              className="card grid place-items-center bg-gradient-to-b from-slate-50 to-white p-10"
             >
-              <img src={imgUrl(gallery[active])} alt={product.name} className="max-h-[380px] object-contain" />
+              <SmartImage src={gallery[active]} alt={product.name} className="h-[340px] w-full" />
             </motion.div>
             {gallery.length > 1 && (
               <div className="mt-4 flex gap-3">
