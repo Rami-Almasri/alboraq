@@ -1,0 +1,36 @@
+# Dependencies
+**/node_modules/
+backend/vendor/
+
+# Environment
+**/.env
+**/.env.backup
+**/.env.production
+
+# Build output
+frontend/dist/
+frontend/dist-ssr/
+backend/public/build/
+backend/public/hot/
+backend/public/storage/
+
+# Laravel storage & cache
+backend/storage/*.key
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+
+# SQLite database (recreate with: php artisan migrate:fresh --seed)
+backend/database/*.sqlite
+backend/database/*.sqlite-journal
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
+*.local
+
+# Editors
+.idea/
+.vscode/
