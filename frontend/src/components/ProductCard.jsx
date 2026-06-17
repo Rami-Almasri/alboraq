@@ -14,6 +14,9 @@ export default function ProductCard({ product, index = 0 }) {
           (1 - Number(product.price) / Number(product.old_price)) * 100
         )
       : 0;
+  // `stock` is undefined on some endpoints — only treat an explicit 0 as out of stock.
+  const outOfStock = product.stock !== undefined && Number(product.stock) === 0;
+  const lowStock = !outOfStock && product.stock !== undefined && Number(product.stock) <= 5;
 
   return (
     <motion.div
@@ -36,6 +39,15 @@ export default function ProductCard({ product, index = 0 }) {
             مميز
           </span>
         )}
+        {outOfStock ? (
+          <span className="rounded-lg bg-slate-700 px-2 py-1 text-xs font-bold text-white shadow">
+            نفد المخزون
+          </span>
+        ) : lowStock ? (
+          <span className="rounded-lg bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow">
+            كمية محدودة
+          </span>
+        ) : null}
       </div>
 
       <button
@@ -97,9 +109,14 @@ export default function ProductCard({ product, index = 0 }) {
             </p>
           </div>
           <motion.button
-            whileTap={{ scale: 0.85 }}
-            onClick={() => addToCart(product.id)}
-            className="grid h-10 w-10 place-items-center rounded-xl bg-brand-500 text-white transition-all duration-300 hover:bg-brand-600 hover:shadow-glow"
+            whileTap={{ scale: outOfStock ? 1 : 0.85 }}
+            onClick={() => !outOfStock && addToCart(product.id)}
+            disabled={outOfStock}
+            className={`grid h-10 w-10 place-items-center rounded-xl text-white transition-all duration-300 ${
+              outOfStock
+                ? "cursor-not-allowed bg-slate-300"
+                : "bg-brand-500 hover:bg-brand-600 hover:shadow-glow"
+            }`}
             aria-label="add to cart"
           >
             <FiShoppingCart />

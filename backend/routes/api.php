@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminChatController;
+use App\Http\Controllers\AdminCouponController;
+use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\AdminStatsController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -72,5 +78,45 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/conversations', [AdminChatController::class, 'index']);
         Route::get('/conversations/{conversation}', [AdminChatController::class, 'show']);
         Route::post('/conversations/{conversation}/messages', [AdminChatController::class, 'store']);
+    });
+
+    /*
+    |----------------------------------------------------------------------
+    | Admin only — product & stock management
+    |----------------------------------------------------------------------
+    */
+    Route::middleware('role:admin')->prefix('admin')->group(function () {
+        // Dashboard
+        Route::get('/stats', [AdminStatsController::class, 'index']);
+
+        // Products & stock
+        Route::get('/products', [AdminProductController::class, 'index']);
+        Route::post('/products', [AdminProductController::class, 'store']);
+        Route::put('/products/{product:id}', [AdminProductController::class, 'update']);
+        Route::delete('/products/{product:id}', [AdminProductController::class, 'destroy']);
+
+        // Categories
+        Route::get('/categories', [AdminCategoryController::class, 'index']);
+        Route::post('/categories', [AdminCategoryController::class, 'store']);
+        Route::put('/categories/{category:id}', [AdminCategoryController::class, 'update']);
+        Route::delete('/categories/{category:id}', [AdminCategoryController::class, 'destroy']);
+
+        // Coupons
+        Route::get('/coupons', [AdminCouponController::class, 'index']);
+        Route::post('/coupons', [AdminCouponController::class, 'store']);
+        Route::put('/coupons/{coupon:id}', [AdminCouponController::class, 'update']);
+        Route::delete('/coupons/{coupon:id}', [AdminCouponController::class, 'destroy']);
+
+        // Orders
+        Route::get('/orders', [AdminOrderController::class, 'index']);
+        Route::get('/orders/{order:id}', [AdminOrderController::class, 'show']);
+        Route::put('/orders/{order:id}', [AdminOrderController::class, 'update']);
+        Route::delete('/orders/{order:id}', [AdminOrderController::class, 'destroy']);
+
+        // Users & roles
+        Route::get('/users', [AdminUserController::class, 'index']);
+        Route::get('/roles', [AdminUserController::class, 'roles']);
+        Route::put('/users/{user:id}', [AdminUserController::class, 'update']);
+        Route::delete('/users/{user:id}', [AdminUserController::class, 'destroy']);
     });
 });

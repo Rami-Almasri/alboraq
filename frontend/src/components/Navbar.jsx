@@ -125,6 +125,15 @@ export default function Navbar() {
 
           {user ? (
             <div className="hidden items-center gap-2 sm:flex">
+              {user.roles?.includes("admin") && (
+                <Link
+                  to="/admin"
+                  className="rounded-lg bg-accent/10 px-3 py-1.5 text-sm font-bold text-accent hover:bg-accent/20"
+                  title="لوحة الإدارة"
+                >
+                  الإدارة
+                </Link>
+              )}
               {user.is_agent && (
                 <Link
                   to="/support"
@@ -200,6 +209,15 @@ export default function Navbar() {
               ))}
               {user ? (
                 <>
+                  {user.roles?.includes("admin") && (
+                    <NavLink
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-accent hover:bg-accent/10"
+                    >
+                      <FiPackage /> لوحة الإدارة
+                    </NavLink>
+                  )}
                   <NavLink
                     to="/orders"
                     onClick={() => setOpen(false)}

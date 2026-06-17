@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Favorites from "./pages/Favorites";
 import Orders from "./pages/Orders";
 import Support from "./pages/Support";
+import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/support" element={<Support />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
