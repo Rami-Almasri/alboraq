@@ -56,4 +56,10 @@ body {
   .skeleton {
     @apply animate-pulse rounded-xl bg-gradient-to-l from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%];
   }
+  .text-gradient {
+    @apply bg-gradient-to-l from-accent to-brand-500 bg-clip-text text-transparent;
+  }
+  .glass {
+    @apply bg-white/10 backdrop-blur-md ring-1 ring-white/15;
+  }
 }

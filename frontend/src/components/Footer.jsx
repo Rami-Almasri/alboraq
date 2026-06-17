@@ -1,9 +1,42 @@
 import { Link } from "react-router-dom";
-import { FiPhone, FiMail, FiMapPin, FiFacebook, FiInstagram } from "react-icons/fi";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FiPhone, FiMail, FiMapPin, FiFacebook, FiInstagram, FiSend } from "react-icons/fi";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
+  const subscribe = (e) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    toast.success("تم اشتراكك في النشرة البريدية 🎉");
+    setEmail("");
+  };
+
   return (
     <footer className="mt-20 bg-brand-900 text-slate-300">
+      {/* Newsletter band */}
+      <div className="border-b border-white/10">
+        <div className="container-app flex flex-col items-center justify-between gap-5 py-10 md:flex-row">
+          <div className="text-center md:text-right">
+            <h3 className="text-xl font-black text-white">اشترك في نشرتنا البريدية</h3>
+            <p className="mt-1 text-sm text-slate-400">كن أول من يعرف عن العروض والمنتجات الجديدة</p>
+          </div>
+          <form onSubmit={subscribe} className="flex w-full max-w-md gap-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="بريدك الإلكتروني"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-accent"
+            />
+            <button type="submit" className="btn shrink-0 bg-accent text-white hover:bg-cyan-400">
+              <FiSend /> اشترك
+            </button>
+          </form>
+        </div>
+      </div>
+
       <div className="container-app grid gap-10 py-14 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
@@ -46,8 +79,8 @@ export default function Footer() {
             <li className="flex items-center gap-2"><FiMapPin /> دمشق - سوريا</li>
           </ul>
           <div className="mt-4 flex gap-3">
-            <a className="grid h-9 w-9 place-items-center rounded-lg bg-white/10 hover:bg-white/20"><FiFacebook /></a>
-            <a className="grid h-9 w-9 place-items-center rounded-lg bg-white/10 hover:bg-white/20"><FiInstagram /></a>
+            <a href="#" className="grid h-9 w-9 cursor-pointer place-items-center rounded-lg bg-white/10 transition-colors hover:bg-accent hover:text-white"><FiFacebook /></a>
+            <a href="#" className="grid h-9 w-9 cursor-pointer place-items-center rounded-lg bg-white/10 transition-colors hover:bg-accent hover:text-white"><FiInstagram /></a>
           </div>
         </div>
       </div>
