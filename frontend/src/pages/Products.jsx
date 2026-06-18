@@ -96,7 +96,7 @@ export default function Products() {
             <select
               value={sort}
               onChange={(e) => setParam("sort", e.target.value)}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold outline-none focus:border-brand-500"
+              className="rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white outline-none focus:border-brand-500"
             >
               {sorts.map((s) => (
                 <option key={s.value} value={s.value}>

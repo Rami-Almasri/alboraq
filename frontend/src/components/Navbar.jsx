@@ -47,8 +47,9 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement bar */}
-      <div className="bg-brand-900 text-white">
-        <div className="container-app flex h-9 items-center justify-between text-xs">
+      <div className="relative overflow-hidden bg-brand-900 text-white">
+        <div className="absolute inset-0 bg-gradient-to-l from-brand-500/20 via-transparent to-accent/20" />
+        <div className="container-app relative flex h-9 items-center justify-between text-xs">
           <span className="flex items-center gap-1.5">
             <FiTruck className="text-accent" /> توصيل مجاني للطلبات فوق 5,000,000 ل.س
           </span>
@@ -61,22 +62,23 @@ export default function Navbar() {
       <header
         className={`sticky top-0 z-50 border-b transition-all duration-300 ${
           scrolled
-            ? "border-black/5 bg-white/90 shadow-md backdrop-blur-xl"
-            : "border-transparent bg-white/70 backdrop-blur-xl"
+            ? "border-white/10 bg-ink-900/70 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.8)] backdrop-blur-2xl"
+            : "border-transparent bg-ink-900/30 backdrop-blur-xl"
         }`}
       >
         <div className="container-app flex h-16 items-center gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="group flex items-center gap-2">
           <motion.div
             whileHover={{ rotate: -8, scale: 1.05 }}
-            className="grid h-10 w-10 place-items-center rounded-xl bg-brand-500 text-white shadow-glow"
+            className="relative grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-violet text-white shadow-glow"
           >
             <span className="text-lg font-black">ب</span>
+            <span className="absolute inset-0 rounded-xl ring-1 ring-white/30" />
           </motion.div>
           <div className="leading-tight">
-            <p className="text-base font-extrabold text-brand-900">البراق</p>
-            <p className="-mt-1 text-[10px] tracking-wider text-slate-400">
+            <p className="text-base font-extrabold text-white">البراق</p>
+            <p className="-mt-1 text-[10px] tracking-[0.25em] text-accent/70">
               AL BORAQ
             </p>
           </div>
@@ -89,10 +91,10 @@ export default function Navbar() {
               key={l.to}
               to={l.to}
               className={({ isActive }) =>
-                `rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                `relative rounded-lg px-3 py-2 text-sm font-semibold transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-gradient-to-l after:from-accent after:to-brand-500 after:transition-transform hover:after:scale-x-100 ${
                   isActive
-                    ? "text-brand-500"
-                    : "text-slate-600 hover:text-brand-500"
+                    ? "text-white after:scale-x-100"
+                    : "text-slate-300 hover:text-white"
                 }`
               }
             >
@@ -103,13 +105,13 @@ export default function Navbar() {
 
         {/* Search */}
         <form onSubmit={search} className="hidden flex-1 md:block lg:max-w-xs">
-          <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-2">
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 transition-colors focus-within:border-brand-500/60 focus-within:bg-white/[0.07]">
             <FiSearch className="text-slate-400" />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="ابحث عن منتج..."
-              className="w-full bg-transparent text-sm outline-none"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
             />
           </div>
         </form>
@@ -183,17 +185,17 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-black/5 bg-white lg:hidden"
+            className="overflow-hidden border-t border-white/10 bg-ink-800/95 backdrop-blur-2xl lg:hidden"
           >
             <div className="container-app flex flex-col gap-1 py-3">
               <form onSubmit={search} className="mb-2">
-                <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-2">
+                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
                   <FiSearch className="text-slate-400" />
                   <input
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="ابحث عن منتج..."
-                    className="w-full bg-transparent text-sm outline-none"
+                    className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
                   />
                 </div>
               </form>
@@ -247,11 +249,11 @@ function IconBtn({ to, badge, children }) {
   return (
     <Link
       to={to}
-      className="relative grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-500"
+      className="relative grid h-9 w-9 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
     >
       <span className="text-lg">{children}</span>
       {badge > 0 && (
-        <span className="absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+        <span className="absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-ink-900 shadow-glow-cyan">
           {badge}
         </span>
       )}

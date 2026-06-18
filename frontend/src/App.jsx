@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
+import AuroraBackground from "./components/AuroraBackground";
+import CursorGlow from "./components/CursorGlow";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -21,7 +23,9 @@ import ChatWidget from "./components/ChatWidget";
 export default function App() {
   const location = useLocation();
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      <AuroraBackground />
+      <CursorGlow />
       <ScrollToTop />
       <Navbar />
       <main className="flex-1">

@@ -80,7 +80,7 @@ export default function ChatWidget() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full bg-brand-500 text-white shadow-glow"
+        className="fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-violet text-white shadow-glow ring-1 ring-white/20"
         aria-label="chat"
       >
         {open ? <FiX size={24} /> : <FiMessageCircle size={24} />}
@@ -97,7 +97,7 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-50 flex h-[460px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10"
+            className="fixed bottom-24 right-6 z-50 flex h-[460px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl bg-ink-800/95 shadow-2xl ring-1 ring-white/10 backdrop-blur-2xl"
           >
             {/* Header */}
             <div className="flex items-center gap-3 bg-brand-900 p-4 text-white">

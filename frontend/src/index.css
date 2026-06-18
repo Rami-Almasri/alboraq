@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
@@ -17,21 +17,35 @@ html {
 body {
   margin: 0;
   font-family: "Cairo", "Tajawal", system-ui, sans-serif;
-  background: #f6f8fb;
-  color: #0c1224;
+  background: #05040f;
+  color: #e7eaf6;
   direction: rtl;
+  overflow-x: hidden;
+}
+
+/* Default border tone for the dark canvas */
+*,
+::before,
+::after {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+::selection {
+  background: rgba(124, 108, 255, 0.35);
+  color: #fff;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 11px;
 }
 ::-webkit-scrollbar-track {
-  background: #eef2ff;
+  background: #08071a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1428a0;
+  background: linear-gradient(180deg, #7c6cff, #22d3ee);
   border-radius: 999px;
+  border: 2px solid #08071a;
 }
 
 @layer components {
@@ -42,24 +56,76 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold transition-all duration-300 active:scale-95;
   }
   .btn-primary {
-    @apply btn bg-brand-500 text-white hover:bg-brand-600 hover:shadow-glow;
+    @apply btn relative overflow-hidden bg-gradient-to-l from-brand-500 to-violet text-white shadow-glow hover:shadow-[0_0_60px_-6px_rgba(124,108,255,0.8)];
   }
   .btn-ghost {
-    @apply btn bg-white text-brand-500 ring-1 ring-brand-100 hover:bg-brand-50;
+    @apply btn bg-white/[0.04] text-white ring-1 ring-white/15 backdrop-blur hover:bg-white/[0.08] hover:ring-white/30;
   }
+  /* Glass card — the backbone surface for the whole app */
   .card {
-    @apply rounded-2xl bg-white shadow-card ring-1 ring-black/5;
+    @apply rounded-2xl bg-white/[0.045] shadow-card ring-1 ring-white/10 backdrop-blur-xl;
   }
   .inp {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30;
   }
   .skeleton {
-    @apply animate-pulse rounded-xl bg-gradient-to-l from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%];
+    @apply animate-pulse rounded-xl bg-gradient-to-l from-white/[0.03] via-white/[0.08] to-white/[0.03] bg-[length:200%_100%];
   }
   .text-gradient {
-    @apply bg-gradient-to-l from-accent to-brand-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-l from-accent via-violet to-brand-500 bg-clip-text text-transparent;
+  }
+  .aurora-text {
+    @apply bg-gradient-to-l from-accent via-violet to-fuchsia bg-clip-text text-transparent;
+    background-size: 220% auto;
+    @apply animate-gradient;
   }
   .glass {
-    @apply bg-white/10 backdrop-blur-md ring-1 ring-white/15;
+    @apply bg-white/[0.06] backdrop-blur-xl ring-1 ring-white/10;
   }
+  /* Hairline gradient frame used on hero / feature panels */
+  .frame-glow {
+    position: relative;
+  }
+  .frame-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(124, 108, 255, 0.6), rgba(34, 211, 238, 0.15) 40%, transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Global dark-mode cascade.
+   The app was authored light; these plain rules sit AFTER @tailwind utilities
+   so they re-tint the most common light-theme utilities to their dark
+   equivalents — making every page legible without touching each file.
+   (Slash-opacity variants like bg-white/80 keep their own classes untouched.)
+--------------------------------------------------------------------------- */
+.text-slate-900 { color: #f3f5fc; }
+.text-slate-800 { color: #e7eaf6; }
+.text-slate-700 { color: #d2d7ea; }
+.text-slate-600 { color: #aab1cf; }
+.text-slate-500 { color: #8a91b4; }
+.text-brand-900 { color: #ffffff; }
+
+.bg-white { background-color: rgba(255, 255, 255, 0.05); }
+.bg-slate-50 { background-color: rgba(255, 255, 255, 0.03); }
+.bg-slate-100 { background-color: rgba(255, 255, 255, 0.06); }
+
+.border-slate-200 { border-color: rgba(255, 255, 255, 0.1); }
+.border-slate-100 { border-color: rgba(255, 255, 255, 0.07); }
+.border-black\/5 { border-color: rgba(255, 255, 255, 0.07); }
+.ring-black\/5 { --tw-ring-color: rgba(255, 255, 255, 0.08); }
+.ring-slate-200 { --tw-ring-color: rgba(255, 255, 255, 0.12); }
+
+/* Native select dropdown options on dark */
+option {
+  background: #0d0b22;
+  color: #e7eaf6;
 }

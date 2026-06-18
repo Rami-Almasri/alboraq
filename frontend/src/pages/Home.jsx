@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   FiArrowLeft,
   FiTruck,
@@ -17,6 +17,7 @@ import ProductSkeleton from "../components/ProductSkeleton";
 import SmartImage from "../components/SmartImage";
 import AnimatedCounter from "../components/AnimatedCounter";
 import Countdown from "../components/Countdown";
+import Magnetic from "../components/Magnetic";
 
 const features = [
   { icon: <FiTruck />, title: "توصيل سريع", desc: "لكل المحافظات السورية" },
@@ -77,98 +78,11 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-brand-900 text-white">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute -right-20 -top-20 h-96 w-96 animate-float rounded-full bg-accent blur-3xl" />
-          <div className="absolute -left-20 bottom-0 h-96 w-96 rounded-full bg-brand-500 blur-3xl" />
-        </div>
-        <div className="container-app relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold ring-1 ring-white/15">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-              الوكيل المعتمد لـ Samsung في سوريا
-            </span>
-            <h1 className="text-4xl font-black leading-tight md:text-6xl">
-              تجربة تقنية
-              <span className="bg-gradient-to-l from-accent to-white bg-clip-text text-transparent">
-                {" "}
-                لا تُضاهى
-              </span>
-            </h1>
-            <p className="mt-4 max-w-md text-lg text-slate-300">
-              اكتشف أحدث هواتف Galaxy، تلفزيونات Neo QLED، والأجهزة المنزلية
-              الذكية بأفضل الأسعار وضمان رسمي.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/products" className="btn-primary bg-accent hover:bg-cyan-400">
-                تسوّق الآن <FiArrowLeft />
-              </Link>
-              <Link to="/products?category=mobiles" className="btn bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/20">
-                هواتف Galaxy
-              </Link>
-            </div>
-            {/* trust row */}
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-300">
-              <span className="flex items-center gap-1.5"><FiShield className="text-accent" /> ضمان رسمي</span>
-              <span className="flex items-center gap-1.5"><FiTruck className="text-accent" /> شحن لكل سوريا</span>
-              <span className="flex items-center gap-1.5"><FiCreditCard className="text-accent" /> دفع عند الاستلام</span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative grid place-items-center"
-          >
-            <div className="absolute h-72 w-72 rounded-full bg-accent/20 blur-2xl" />
-            <div className="animate-float rounded-[2rem] bg-white/5 p-4 ring-1 ring-white/10 backdrop-blur-sm">
-              <img
-                src="/products/smartphone.svg"
-                alt="Samsung Galaxy"
-                className="h-[360px] w-auto drop-shadow-2xl"
-              />
-            </div>
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="absolute -bottom-2 right-2 flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-brand-900 shadow-xl"
-            >
-              <span className="text-amber-500">★</span>
-              <span className="text-sm font-bold">4.9 تقييم العملاء</span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute left-2 top-4 rounded-2xl bg-accent px-4 py-2 text-sm font-extrabold text-white shadow-xl"
-            >
-              خصم حتى 20%
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* brand marquee */}
-        <div className="relative border-t border-white/10 bg-white/5 py-4">
-          <div className="flex w-max animate-marquee gap-10 whitespace-nowrap px-5">
-            {[...brands, ...brands].map((b, i) => (
-              <span key={i} className="flex items-center gap-3 text-sm font-bold tracking-wide text-white/50">
-                {b} <span className="text-accent">◆</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* FEATURES */}
       <section className="container-app relative z-10 -mt-10">
-        <div className="grid gap-4 rounded-2xl bg-white p-5 shadow-card sm:grid-cols-2 lg:grid-cols-4">
+        <div className="card grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f, i) => (
             <motion.div
               key={i}
@@ -176,14 +90,14 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-brand-50"
+              className="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-white/5"
             >
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-xl text-brand-500">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-500/15 text-xl text-brand-500 ring-1 ring-brand-500/25">
                 {f.icon}
               </div>
               <div>
-                <p className="font-bold text-slate-800">{f.title}</p>
-                <p className="text-xs text-slate-500">{f.desc}</p>
+                <p className="font-bold text-white">{f.title}</p>
+                <p className="text-xs text-slate-400">{f.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -192,7 +106,7 @@ export default function Home() {
 
       {/* STATS */}
       <section className="container-app pt-16">
-        <div className="grid grid-cols-2 gap-4 rounded-3xl bg-gradient-to-l from-brand-900 to-brand-700 p-8 text-center text-white sm:grid-cols-4 md:p-10">
+        <div className="frame-glow grid grid-cols-2 gap-4 overflow-hidden rounded-3xl bg-white/[0.03] p-8 text-center text-white ring-1 ring-white/10 backdrop-blur-xl sm:grid-cols-4 md:p-10">
           {stats.map((s, i) => (
             <motion.div
               key={i}
@@ -202,9 +116,9 @@ export default function Home() {
               transition={{ delay: i * 0.1 }}
             >
               <p className="text-3xl font-black md:text-4xl">
-                <AnimatedCounter to={s.to} suffix={s.suffix} />
+                <AnimatedCounter to={s.to} suffix={s.suffix} className="aurora-text" />
               </p>
-              <p className="mt-1 text-sm text-slate-300">{s.label}</p>
+              <p className="mt-1 text-sm text-slate-400">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -224,16 +138,16 @@ export default function Home() {
             >
               <Link
                 to={c ? `/products?category=${c.slug}` : "/products"}
-                className="card group flex flex-col items-center gap-3 p-6 text-center transition-all hover:-translate-y-1 hover:shadow-glow"
+                className="card group flex flex-col items-center gap-3 p-6 text-center transition-all hover:-translate-y-1 hover:ring-brand-500/40 hover:shadow-glow"
               >
-                <div className="h-24 w-24 overflow-hidden rounded-2xl bg-brand-50 p-1 transition-transform duration-300 group-hover:scale-110">
+                <div className="h-24 w-24 overflow-hidden rounded-2xl bg-white/5 p-1 ring-1 ring-white/10 transition-transform duration-300 group-hover:scale-110">
                   {c?.image ? (
                     <SmartImage src={c.image} alt={c.name} className="h-full w-full" />
                   ) : (
                     <span className="grid h-full place-items-center text-3xl">📱</span>
                   )}
                 </div>
-                <p className="font-bold text-slate-800 group-hover:text-brand-500">
+                <p className="font-bold text-white group-hover:text-brand-500">
                   {c?.name || "فئة"}
                 </p>
               </Link>
@@ -245,15 +159,16 @@ export default function Home() {
       {/* FLASH DEALS */}
       {!loading && deals.length > 0 && (
         <section className="container-app pb-16">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-brand-700 via-brand-600 to-accent p-6 md:p-10">
-            <div className="absolute -left-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+          <div className="frame-glow relative overflow-hidden rounded-3xl bg-gradient-to-l from-brand-700/40 via-brand-900/60 to-ink-800 p-6 ring-1 ring-white/10 md:p-10">
+            <div className="absolute -left-10 -top-10 h-48 w-48 animate-aurora rounded-full bg-fuchsia/20 blur-2xl" />
+            <div className="absolute -right-10 bottom-0 h-48 w-48 animate-aurora-slow rounded-full bg-accent/20 blur-2xl" />
             <div className="relative flex flex-col items-center justify-between gap-5 text-white md:flex-row">
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold ring-1 ring-white/20">
                   <FiZap className="text-amber-300" /> عروض محدودة
                 </span>
                 <h2 className="mt-3 text-2xl font-black md:text-3xl">عروض الفلاش تنتهي قريباً ⚡</h2>
-                <p className="mt-1 text-sm text-white/80">سارع بالطلب قبل انتهاء الوقت</p>
+                <p className="mt-1 text-sm text-white/70">سارع بالطلب قبل انتهاء الوقت</p>
               </div>
               <Countdown target={dealEnds} />
             </div>
@@ -277,11 +192,11 @@ export default function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="bg-white py-16">
+      <section className="relative py-16">
         <div className="container-app">
           <div className="mb-10 text-center">
             <p className="text-sm font-semibold text-accent">آراء عملائنا</p>
-            <h2 className="text-2xl font-black text-slate-900 md:text-3xl">يثقون بنا ويوصون بنا</h2>
+            <h2 className="text-2xl font-black text-white md:text-3xl">يثقون بنا ويوصون بنا</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {testimonials.map((t, i) => (
@@ -291,20 +206,20 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="card flex flex-col p-6"
+                className="card flex flex-col p-6 transition-all hover:ring-brand-500/30"
               >
                 <div className="mb-3 flex gap-0.5 text-amber-400">
                   {Array(5).fill(null).map((_, s) => (
-                    <FiStar key={s} fill={s < t.rating ? "currentColor" : "none"} className={s < t.rating ? "" : "text-slate-200"} />
+                    <FiStar key={s} fill={s < t.rating ? "currentColor" : "none"} className={s < t.rating ? "" : "text-slate-600"} />
                   ))}
                 </div>
-                <p className="flex-1 text-sm leading-relaxed text-slate-600">“{t.text}”</p>
-                <div className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-brand-50 font-bold text-brand-600">
+                <p className="flex-1 text-sm leading-relaxed text-slate-300">“{t.text}”</p>
+                <div className="mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-violet font-bold text-white">
                     {t.name[0]}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">{t.name}</p>
+                    <p className="text-sm font-bold text-white">{t.name}</p>
                     <p className="text-xs text-slate-400">{t.city}</p>
                   </div>
                 </div>
@@ -316,19 +231,144 @@ export default function Home() {
 
       {/* CTA BANNER */}
       <section className="container-app py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-brand-500 to-brand-700 p-10 text-center text-white md:p-16">
-          <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-          <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-accent/30 blur-2xl" />
-          <h3 className="relative text-2xl font-black md:text-4xl">انضم إلى عائلة البراق</h3>
-          <p className="relative mx-auto mt-3 max-w-lg text-slate-200">
+        <div className="frame-glow relative overflow-hidden rounded-3xl bg-gradient-to-l from-brand-700/50 via-brand-900/70 to-ink-800 p-10 text-center text-white ring-1 ring-white/10 md:p-16">
+          <div className="absolute -left-10 -top-10 h-40 w-40 animate-aurora rounded-full bg-brand-500/30 blur-2xl" />
+          <div className="absolute -bottom-10 -right-10 h-40 w-40 animate-aurora-slow rounded-full bg-accent/30 blur-2xl" />
+          <h3 className="relative text-2xl font-black md:text-4xl">
+            انضم إلى عائلة <span className="aurora-text">البراق</span>
+          </h3>
+          <p className="relative mx-auto mt-3 max-w-lg text-slate-300">
             سجّل الآن واحصل على عروض حصرية وخصومات على أحدث منتجات سامسونج.
           </p>
-          <Link to="/register" className="btn relative mt-6 bg-white text-brand-600 hover:bg-slate-100">
-            أنشئ حسابك المجاني <FiArrowLeft />
-          </Link>
+          <Magnetic className="relative mt-6 inline-block">
+            <Link to="/register" className="btn-primary">
+              أنشئ حسابك المجاني <FiArrowLeft />
+            </Link>
+          </Magnetic>
         </div>
       </section>
     </PageWrapper>
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Hero — a 3D-tilt product showcase over a living aurora, with magnetic CTAs.
+-------------------------------------------------------------------------- */
+function Hero() {
+  const ref = useRef(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), { stiffness: 120, damping: 14 });
+  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-16, 16]), { stiffness: 120, damping: 14 });
+
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  return (
+    <section className="relative overflow-hidden">
+      <div className="container-app relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-4 py-1.5 text-sm font-semibold text-slate-200 ring-1 ring-white/15 backdrop-blur">
+            <span className="h-2 w-2 animate-ticker rounded-full bg-accent shadow-glow-cyan" />
+            الوكيل المعتمد لـ Samsung في سوريا
+          </span>
+          <h1 className="text-4xl font-black leading-tight md:text-6xl">
+            تجربة تقنية
+            <br />
+            <span className="aurora-text">لا تُضاهى</span>
+          </h1>
+          <p className="mt-4 max-w-md text-lg text-slate-300">
+            اكتشف أحدث هواتف Galaxy، تلفزيونات Neo QLED، والأجهزة المنزلية
+            الذكية بأفضل الأسعار وضمان رسمي.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Magnetic>
+              <Link to="/products" className="btn-primary">
+                تسوّق الآن <FiArrowLeft />
+              </Link>
+            </Magnetic>
+            <Magnetic>
+              <Link to="/products?category=mobiles" className="btn-ghost">
+                هواتف Galaxy
+              </Link>
+            </Magnetic>
+          </div>
+          {/* trust row */}
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
+            <span className="flex items-center gap-1.5"><FiShield className="text-accent" /> ضمان رسمي</span>
+            <span className="flex items-center gap-1.5"><FiTruck className="text-accent" /> شحن لكل سوريا</span>
+            <span className="flex items-center gap-1.5"><FiCreditCard className="text-accent" /> دفع عند الاستلام</span>
+          </div>
+        </motion.div>
+
+        <motion.div
+          ref={ref}
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          style={{ perspective: 1000 }}
+          className="relative grid place-items-center"
+        >
+          <div className="absolute h-72 w-72 animate-glowpulse rounded-full bg-brand-500/30 blur-3xl" />
+          <motion.div
+            style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
+            className="frame-glow relative animate-float rounded-[2rem] bg-white/[0.04] p-4 ring-1 ring-white/10 backdrop-blur-sm"
+          >
+            <img
+              src="/products/smartphone.svg"
+              alt="Samsung Galaxy"
+              className="h-[360px] w-auto drop-shadow-2xl"
+              style={{ transform: "translateZ(60px)" }}
+            />
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
+              style={{ transform: "translateZ(90px)" }}
+              className="absolute -bottom-2 right-2 flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2 text-white ring-1 ring-white/20 backdrop-blur-md"
+            >
+              <span className="text-amber-400">★</span>
+              <span className="text-sm font-bold">4.9 تقييم العملاء</span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
+              style={{ transform: "translateZ(110px)" }}
+              className="absolute left-2 top-4 rounded-2xl bg-gradient-to-l from-fuchsia to-brand-500 px-4 py-2 text-sm font-extrabold text-white shadow-glow"
+            >
+              خصم حتى 20%
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* brand marquee */}
+      <div className="relative border-y border-white/10 bg-white/[0.03] py-4 backdrop-blur-sm">
+        <div className="flex w-max animate-marquee gap-10 whitespace-nowrap px-5">
+          {[...brands, ...brands].map((b, i) => (
+            <span key={i} className="flex items-center gap-3 text-sm font-bold tracking-wide text-white/40">
+              {b} <span className="text-accent">◆</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -337,9 +377,9 @@ function SectionHeader({ title, subtitle, link }) {
     <div className="mb-8 flex items-end justify-between">
       <div>
         <p className="text-sm font-semibold text-accent">{subtitle}</p>
-        <h2 className="text-2xl font-black text-slate-900 md:text-3xl">{title}</h2>
+        <h2 className="text-2xl font-black text-white md:text-3xl">{title}</h2>
       </div>
-      <Link to={link} className="flex items-center gap-1 text-sm font-semibold text-brand-500 transition-all hover:gap-2">
+      <Link to={link} className="group flex items-center gap-1 text-sm font-semibold text-brand-500 transition-all hover:gap-2 hover:text-accent">
         عرض الكل <FiArrowLeft />
       </Link>
     </div>

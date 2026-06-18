@@ -5,7 +5,7 @@ import { useInView } from "framer-motion";
  * Counts up from 0 to `to` the first time it scrolls into view.
  * Uses an eased requestAnimationFrame loop for a smooth ramp.
  */
-export default function AnimatedCounter({ to, duration = 1600, prefix = "", suffix = "" }) {
+export default function AnimatedCounter({ to, duration = 1600, prefix = "", suffix = "", className = "" }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [val, setVal] = useState(0);
@@ -25,7 +25,7 @@ export default function AnimatedCounter({ to, duration = 1600, prefix = "", suff
   }, [inView, to, duration]);
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className={className}>
       {prefix}
       {val.toLocaleString("en-US")}
       {suffix}

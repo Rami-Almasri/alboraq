@@ -14,7 +14,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="mt-20 bg-brand-900 text-slate-300">
+    <footer className="relative mt-20 border-t border-white/10 bg-ink-900/60 text-slate-300 backdrop-blur-xl">
+      {/* Neon top edge */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-brand-500 to-transparent" />
       {/* Newsletter band */}
       <div className="border-b border-white/10">
         <div className="container-app flex flex-col items-center justify-between gap-5 py-10 md:flex-row">
@@ -40,7 +42,7 @@ export default function Footer() {
       <div className="container-app grid gap-10 py-14 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-500 text-white">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-violet text-white shadow-glow">
               <span className="text-lg font-black">ب</span>
             </div>
             <p className="text-lg font-extrabold text-white">البراق للاتصالات</p>
